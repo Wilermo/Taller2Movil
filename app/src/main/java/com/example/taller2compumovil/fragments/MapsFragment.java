@@ -62,7 +62,9 @@ public class MapsFragment extends Fragment {
     //Map interaction variables
     GoogleMap googleMap;
     static final int INITIAL_ZOOM_LEVEL = 18;
+
     private final LatLng UNIVERSIDAD = new LatLng(4.628150, -74.064227);
+
     Marker userPosition;
     Polyline userRoute;
     List<Marker> places = new ArrayList<>();
@@ -72,7 +74,9 @@ public class MapsFragment extends Fragment {
     Sensor lightSensor;
     SensorEventListener lightSensorEventListener;
 
+
     Marker marker;
+
 
 
     private OnMapReadyCallback callback = new OnMapReadyCallback() {
@@ -103,7 +107,9 @@ public class MapsFragment extends Fragment {
                     .snippet("Y otra cosas")
                     .anchor(0.5f, 1.0f)
                     .zIndex(1.0f));
+
             googleMap.moveCamera(CameraUpdateFactory.newLatLng(UNIVERSIDAD));
+
             //Setup the route line
             userRoute = googleMap.addPolyline(new PolylineOptions()
                     .color(R.color.green_500)
@@ -126,6 +132,7 @@ public class MapsFragment extends Fragment {
                     marker = googleMap.addMarker(markerOption);
                 }
             });
+
         }
     };
 
@@ -169,8 +176,10 @@ public class MapsFragment extends Fragment {
                             .snippet(address.getAddressLine(0))
                             .position(new LatLng(address.getLatitude(), address.getLongitude())));
                     places.add(tmp);
+
                     googleMap.animateCamera(CameraUpdateFactory.newLatLng(places.get(0).getPosition()));
                 });
+
 
             } catch (IOException e) {
                 e.printStackTrace();
