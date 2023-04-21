@@ -26,15 +26,18 @@ import lombok.Getter;
 @InstallIn(ActivityComponent.class)
 public class GeoInfoFromJsonService {
     public static final String TAG = GeoInfoFromJsonService.class.getName();
-    public static final String COUNTRIES_FILE = "nyc_info.json";
+
     private final Context context;
     private ArrayList<GeoInfo> geoInfoList = new ArrayList<>();
 
     @Inject
     public GeoInfoFromJsonService(@ApplicationContext Context context) {
         this.context = context;
-        loadGeoInfoFromJson();
+
+        //loadGeoInfoFromJson();
     }
+
+
 
     public String loadJSONFromAsset() {
         String json = null;
@@ -56,4 +59,5 @@ public class GeoInfoFromJsonService {
         geoInfoList = new Gson().fromJson(loadJSONFromAsset(), new TypeToken<List<GeoInfo>>() {}.getType());
         Log.d(TAG, String.format("loadGeoInfoFromJson: loaded %d registries.", geoInfoList.size()));
     }
+
 }

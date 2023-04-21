@@ -62,7 +62,9 @@ public class MapsFragment extends Fragment {
     //Map interaction variables
     GoogleMap googleMap;
     static final int INITIAL_ZOOM_LEVEL = 18;
-    private final LatLng CENTRAL_PARK = new LatLng(40.7812, -73.9665);
+
+    private final LatLng UNIVERSIDAD = new LatLng(4.628150, -74.064227);
+
     Marker userPosition;
     Polyline userRoute;
     List<Marker> places = new ArrayList<>();
@@ -71,6 +73,10 @@ public class MapsFragment extends Fragment {
     SensorManager sensorManager;
     Sensor lightSensor;
     SensorEventListener lightSensorEventListener;
+
+
+    Marker marker;
+
 
 
     private OnMapReadyCallback callback = new OnMapReadyCallback() {
@@ -95,13 +101,15 @@ public class MapsFragment extends Fragment {
             googleMap.getUiSettings().setCompassEnabled(true);
             //Setup the user marker with a default position
             userPosition = googleMap.addMarker(new MarkerOptions()
-                    .position(CENTRAL_PARK)
+                    .position(UNIVERSIDAD)
                     .icon(BitmapUtils.getBitmapDescriptor(getContext(), R.drawable.baseline_person_pin_circle_24))
                     .title("Usted esta aqui!")
                     .snippet("Y otra cosas")
                     .anchor(0.5f, 1.0f)
                     .zIndex(1.0f));
-            googleMap.moveCamera(CameraUpdateFactory.newLatLng(CENTRAL_PARK));
+
+            googleMap.moveCamera(CameraUpdateFactory.newLatLng(UNIVERSIDAD));
+
             //Setup the route line
             userRoute = googleMap.addPolyline(new PolylineOptions()
                     .color(R.color.green_500)
@@ -110,6 +118,21 @@ public class MapsFragment extends Fragment {
                     .zIndex(0.5f));
             //Setup the rest of the markers based in a json file
             loadGeoInfo();
+
+            googleMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
+
+                @Override
+                public void onMapLongClick(@NonNull LatLng latLng) {
+                    if(marker!=null){
+                        marker.remove();
+                    }
+                    MarkerOptions markerOption = new MarkerOptions();
+                    markerOption.position(latLng).icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)).title("Ubicación seleccionada")
+                            .snippet(latLng.toString());
+                    marker = googleMap.addMarker(markerOption);
+                }
+            });
+
         }
     };
 
@@ -153,7 +176,11 @@ public class MapsFragment extends Fragment {
                             .snippet(address.getAddressLine(0))
                             .position(new LatLng(address.getLatitude(), address.getLongitude())));
                     places.add(tmp);
+
+                    googleMap.animateCamera(CameraUpdateFactory.newLatLng(places.get(0).getPosition()));
                 });
+
+
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -183,6 +210,8 @@ public class MapsFragment extends Fragment {
             }
         };
         sensorManager.registerListener(lightSensorEventListener, lightSensor, SensorManager.SENSOR_DELAY_UI);
+
+
     }
 
     @Override
